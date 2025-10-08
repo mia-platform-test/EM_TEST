@@ -87,23 +87,6 @@ spec:
               value: isbackoffice
             - name: USER_PROPERTIES_HEADER_KEY
               value: miauserproperties
-          readinessProbe:
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 1
-            successThreshold: 1
-            failureThreshold: 3
-            httpGet:
-              port: http
-              path: /-/ready
-          livenessProbe:
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            timeoutSeconds: 1
-            failureThreshold: 3
-            httpGet:
-              port: http
-              path: /-/healthz
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
