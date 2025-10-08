@@ -37,12 +37,13 @@ jobs:
           DEPLOY_FOLDER: environments/${{ github.event.deployment.environment }}
         run: |
               echo "Deploying manifests in namespace $KUBE_NAMESPACE..."
-    
-              echo "===== FILES TO APPLY ====="
-              find $DEPLOY_FOLDER -name "*.yml" -o -name "*.yaml"
-              echo "=========================="
 
-              kubectl apply -f $DEPLOY_FOLDER -n $KUBE_NAMESPACE
+              echo "===== FILES TO APPLY ====="
+              find $DEPLOY_FOLDER -type f \( -name "*.yml" -o -name "*.yaml" \) ! -name "kustomization.yaml"
+              echo "=========================="
+          
+              find $DEPLOY_FOLDER -type f \( -name "*.yml" -o -name "*.yaml" \) ! -name "kustomization.yaml" \
+                -exec kubectl apply -f {} -n $KUBE_NAMESPACE \;
       - name: Update deployment status (success)
         if: success()
         uses: chrnorm/deployment-status@v2
