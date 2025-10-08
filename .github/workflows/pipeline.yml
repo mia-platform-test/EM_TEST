@@ -36,8 +36,15 @@ jobs:
           KUBE_NAMESPACE: ${{ github.event.deployment.payload.variables.KUBE_NAMESPACE }}
           DEPLOY_FOLDER: environments/${{ github.event.deployment.environment }}
         run: |
-             echo "Deploying manifests in namespace $KUBE_NAMESPACE..."
-             kubectl apply -k $DEPLOY_FOLDER
+              echo "Deploying manifests in namespace $KUBE_NAMESPACE..."
+
+              echo "===== KUSTOMIZE OUTPUT START ====="
+              kustomize build overlays/dev > out.yaml
+              cat out.yaml
+              echo "===== KUSTOMIZE OUTPUT END ====="
+            
+              echo "Applying manifests..."
+              kubectl apply -f out.yaml -n $KUBE_NAMESPACE
       - name: Update deployment status (success)
         if: success()
         uses: chrnorm/deployment-status@v2
