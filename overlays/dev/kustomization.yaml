@@ -1,0 +1,3 @@
+resources:
+  - ../../base/api-gateway-deployment.yaml
+  - ../../base/api-gateway-service.yaml
