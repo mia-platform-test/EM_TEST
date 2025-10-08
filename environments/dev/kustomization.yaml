@@ -2,10 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../configuration
-  - api-gateway-envoy-config.configmap.yml
-  - api-gateway.deployment.yml
-  - api-gateway.service.yml
-  - micro-lc-angular-14-template.deployment.yml
-  - micro-lc-angular-14-template.service.yml
+  - nodejs-16-helloworld-microservice-example-t.deployment.yml
+  - nodejs-16-helloworld-microservice-example-t.service.yml
   - api-gateway.serviceaccount.yml
   - micro-lc-angular-14-template.serviceaccount.yml
+  - nodejs-16-helloworld-microservice-example-t.serviceaccount.yml

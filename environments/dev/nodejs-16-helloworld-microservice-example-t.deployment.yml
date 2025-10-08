@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-gateway
+  name: nodejs-16-helloworld-microservice-example-t
   annotations:
     mia-platform.eu/version: 14.1.0-alpha.0
     apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
     apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
     fluentbit.io/parser: pino
   labels:
-    app: api-gateway
-    app.kubernetes.io/name: api-gateway
-    app.kubernetes.io/version: v1.29.2
+    app: nodejs-16-helloworld-microservice-example-t
+    app.kubernetes.io/name: nodejs-16-helloworld-microservice-example-t
+    app.kubernetes.io/version: latest
     app.kubernetes.io/component: custom
     app.kubernetes.io/part-of: em-test
     app.kubernetes.io/managed-by: mia-platform
@@ -21,7 +21,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api-gateway
+      app: nodejs-16-helloworld-microservice-example-t
   strategy:
     type: RollingUpdate
   revisionHistoryLimit: 1
@@ -33,9 +33,9 @@ spec:
         apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
         fluentbit.io/parser: pino
       labels:
-        app: api-gateway
-        app.kubernetes.io/name: api-gateway
-        app.kubernetes.io/version: v1.29.2
+        app: nodejs-16-helloworld-microservice-example-t
+        app.kubernetes.io/name: nodejs-16-helloworld-microservice-example-t
+        app.kubernetes.io/version: latest
         app.kubernetes.io/component: custom
         app.kubernetes.io/part-of: em-test
         app.kubernetes.io/managed-by: mia-platform
@@ -45,39 +45,25 @@ spec:
     spec:
       imagePullSecrets:
         - name: nexus-gcloud
-      terminationGracePeriodSeconds: 60
-      serviceAccountName: api-gateway
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: nodejs-16-helloworld-microservice-example-t
       containers:
-        - name: api-gateway
-          image: nexus.mia-platform.eu/cache/envoyproxy/envoy:v1.29.2
+        - name: nodejs-16-helloworld-microservice-example-t
+          image: harbor.local/mia-platform-test/nodejs-16-helloworld-microservice-example
           imagePullPolicy: Always
           resources:
             limits:
-              memory: 250Mi
-              cpu: 200m
+              memory: 150Mi
+              cpu: 100m
             requests:
               memory: 150Mi
-              cpu: 150m
-          volumeMounts:
-            - name: api-gateway-envoy-config
-              mountPath: /etc/envoy
-              readOnly: true
+              cpu: 100m
+          volumeMounts: []
           ports:
-            - name: frontend
-              containerPort: 8080
-            - name: backoffice
-              containerPort: 8081
-            - name: admin
-              containerPort: 9901
-          args:
-            - '-c'
-            - /etc/envoy/envoy.json
-            - '-l'
-            - '{{LOG_LEVEL}}'
-            - '--log-format'
-            - '{"level":"%l","time":"%Y-%m-%dT%T.%fZ","scope":"%n","message":"%j"}'
-            - '--drain-time-s'
-            - '50'
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          args: []
           env:
             - name: LOG_LEVEL
               value: '{{LOG_LEVEL}}'
@@ -97,13 +83,6 @@ spec:
               value: isbackoffice
             - name: USER_PROPERTIES_HEADER_KEY
               value: miauserproperties
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                  - bash
-                  - '-c'
-                  - "echo -e 'POST /drain_listeners?graceful HTTP/1.1\r\nHost: localhost:9901\r\n\r' > /dev/tcp/localhost/9901 && sleep 55s"
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -111,23 +90,20 @@ spec:
             successThreshold: 1
             failureThreshold: 3
             httpGet:
-              port: frontend
-              path: /healthz
+              port: http
+              path: /-/ready
           livenessProbe:
             initialDelaySeconds: 15
             periodSeconds: 20
             timeoutSeconds: 1
             failureThreshold: 3
             httpGet:
-              port: frontend
-              path: /healthz
+              port: http
+              path: /-/healthz
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
-      volumes:
-        - name: api-gateway-envoy-config
-          configMap:
-            name: api-gateway-envoy-config
+      volumes: []
       hostIPC: false
       hostNetwork: false
       hostPID: false
