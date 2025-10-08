@@ -53,7 +53,7 @@ spec:
       serviceAccountName: helloworld-service
       containers:
         - name: helloworld-service
-          image: harbor.local/mia-platform-test/helloworld-service
+          image: harbor.local/mia-platform-test/helloworld-service:latest
           imagePullPolicy: Always
           resources:
             limits:
