@@ -1,15 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodejs-16-helloworld-microservice-example-t
+  name: helloworld-service
   annotations:
     mia-platform.eu/version: 14.1.0-alpha.0
     apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
     apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
     fluentbit.io/parser: pino
+    domain: helloworld
   labels:
-    app: nodejs-16-helloworld-microservice-example-t
-    app.kubernetes.io/name: nodejs-16-helloworld-microservice-example-t
+    app: helloworld-service
+    app.kubernetes.io/name: helloworld-service
     app.kubernetes.io/version: latest
     app.kubernetes.io/component: custom
     app.kubernetes.io/part-of: em-test
@@ -17,11 +18,12 @@ metadata:
     mia-platform.eu/stage: dev
     mia-platform.eu/tenant: c1d106ff-4716-49a1-88e2-940b21705986
     mia-platform.eu/log-type: mia-json
+    technologies: html
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nodejs-16-helloworld-microservice-example-t
+      app: helloworld-service
   strategy:
     type: RollingUpdate
   revisionHistoryLimit: 1
@@ -32,9 +34,10 @@ spec:
         apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
         apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
         fluentbit.io/parser: pino
+        domain: helloworld
       labels:
-        app: nodejs-16-helloworld-microservice-example-t
-        app.kubernetes.io/name: nodejs-16-helloworld-microservice-example-t
+        app: helloworld-service
+        app.kubernetes.io/name: helloworld-service
         app.kubernetes.io/version: latest
         app.kubernetes.io/component: custom
         app.kubernetes.io/part-of: em-test
@@ -42,26 +45,27 @@ spec:
         mia-platform.eu/stage: dev
         mia-platform.eu/tenant: c1d106ff-4716-49a1-88e2-940b21705986
         mia-platform.eu/log-type: mia-json
+        technologies: html
     spec:
       imagePullSecrets:
         - name: nexus-gcloud
       terminationGracePeriodSeconds: 30
-      serviceAccountName: nodejs-16-helloworld-microservice-example-t
+      serviceAccountName: helloworld-service
       containers:
-        - name: nodejs-16-helloworld-microservice-example-t
-          image: harbor.local/mia-platform-test/nodejs-16-helloworld-microservice-example
+        - name: helloworld-service
+          image: harbor.local/mia-platform-test/helloworld-service
           imagePullPolicy: Always
           resources:
             limits:
-              memory: 150Mi
+              memory: 100Mi
               cpu: 100m
             requests:
-              memory: 150Mi
-              cpu: 100m
+              memory: 50Mi
+              cpu: 50m
           volumeMounts: []
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: 80
               protocol: TCP
           args: []
           env:

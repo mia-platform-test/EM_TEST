@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nodejs-16-helloworld-microservice-example-t
+  name: helloworld-service
   annotations:
     mia-platform.eu/version: 14.1.0-alpha.0
   labels:
-    app: nodejs-16-helloworld-microservice-example-t
-    app.kubernetes.io/name: nodejs-16-helloworld-microservice-example-t
+    app: helloworld-service
+    app.kubernetes.io/name: helloworld-service
     app.kubernetes.io/version: latest
     app.kubernetes.io/component: custom
     app.kubernetes.io/part-of: em-test
@@ -19,7 +19,7 @@ spec:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 80
       nodePort: null
   selector:
-    app: nodejs-16-helloworld-microservice-example-t
+    app: helloworld-service

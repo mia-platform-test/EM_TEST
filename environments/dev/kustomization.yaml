@@ -2,8 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../configuration
-  - nodejs-16-helloworld-microservice-example-t.deployment.yml
-  - nodejs-16-helloworld-microservice-example-t.service.yml
+  - helloworld-service.deployment.yml
+  - helloworld-service.service.yml
   - api-gateway.serviceaccount.yml
   - micro-lc-angular-14-template.serviceaccount.yml
   - nodejs-16-helloworld-microservice-example-t.serviceaccount.yml
+  - helloworld-service.serviceaccount.yml
