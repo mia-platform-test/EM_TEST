@@ -49,7 +49,7 @@ spec:
       serviceAccountName: micro-lc-angular-14-template
       containers:
         - name: micro-lc-angular-14-template
-          image: harbor.local/mia-platform-test/micro-lc-angular-14-template
+          image: nexus.mia-platform.eu/mia-platform-test/micro-lc-angular-14-template
           imagePullPolicy: Always
           resources:
             limits:
