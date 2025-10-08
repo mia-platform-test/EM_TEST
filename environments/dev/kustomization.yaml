@@ -5,4 +5,7 @@ resources:
   - api-gateway-envoy-config.configmap.yml
   - api-gateway.deployment.yml
   - api-gateway.service.yml
+  - micro-lc-angular-14-template.deployment.yml
+  - micro-lc-angular-14-template.service.yml
   - api-gateway.serviceaccount.yml
+  - micro-lc-angular-14-template.serviceaccount.yml
